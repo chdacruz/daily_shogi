@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "832133119578",
+    "project_id": "daily-shogi",
+    "storage_bucket": "daily-shogi.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:832133119578:android:5a9535ebcbe6aea3a12263",
+        "android_client_info": {
+          "package_name": "com.example.daily_shogi"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "832133119578-m8iotp05tdicd5e6lurb81tk6rp1o7ap.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.daily_shogi",
+            "certificate_hash": "8958fc73c33ea199e3b18bd1e2a1bd6fd6a149e0"
+          }
+        },
+        {
+          "client_id": "832133119578-jrbidjpihvrhoel6k11c3snc56o482f6.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCQ0sWz_t9DxsfjwMOylFUrxiDf941_U0k"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "832133119578-jrbidjpihvrhoel6k11c3snc56o482f6.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

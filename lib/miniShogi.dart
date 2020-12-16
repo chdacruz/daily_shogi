@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MiniShogiScreen extends StatefulWidget {
   @override
@@ -9,16 +10,38 @@ class MiniShogiScreen extends StatefulWidget {
 
 class _MiniShogiScreenState extends State<MiniShogiScreen> {
   //R = Rook; B = Bishop; SG = Silver General; GG = Golden General; K = King; P = Pawn;
-  List<List<String>> gridState = [
+  /*List<List<String>> gridState = [
     ['R2', 'B2', 'SG2', 'GG2', 'K2'],
     ['', '', '', '', 'P2'],
     ['', '', '', '', ''],
     ['P1', '', '', '', ''],
     ['K1', 'GG1', 'SG1', 'B1', 'R1'],
-  ];
+  ];*/
+
+  List<List<String>> gridState = new List<List<String>>();
+  final _firestore = Firestore.instance;
+
+  //Future<List<List<String>>> _setInitialBoardPositions() async {
+  Future<void> _setInitialBoardPositions() async {
+    try {
+      if(gridState.length < 5) {
+        DocumentSnapshot doc = await _firestore.collection("appData").document(
+            "games").collection("dobotsu").document("initialPosition").get();
+        doc.data.forEach((key, value) {
+          gridState.add(value.cast<String>());
+        });
+      }
+    } catch(e) {
+      gridState = e;
+    }
+
+   //print(gridState);
+    return gridState;
+  }
 
   @override
   Widget build(BuildContext context) {
+    //_setInitialBoardPositions();
     return Scaffold(
         appBar: AppBar(
           title: Text('Daily Shogi'),
@@ -27,7 +50,15 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                _buildBoard(),
+                FutureBuilder(
+                    future: _setInitialBoardPositions(),
+                    builder: (context, snapshot) {
+                      if(snapshot.connectionState == ConnectionState.done) {
+                        return _buildBoard();
+                      } else {
+                        return CircularProgressIndicator();
+                      }
+                    })
               ],
             )
         )
@@ -35,7 +66,11 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
   }
 
   Widget _buildBoard() {
-    int gridStateLength = gridState.length;
+    int gridStateLength;
+
+    //_setInitialBoardPositions();
+    gridStateLength = gridState.length;
+
     return Column(
         children: <Widget>[
           AspectRatio(
