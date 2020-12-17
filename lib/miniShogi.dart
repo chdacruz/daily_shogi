@@ -25,8 +25,7 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
   Future<void> _setInitialBoardPositions() async {
     try {
       if(gridState.length < 5) {
-        DocumentSnapshot doc = await _firestore.collection("appData").document(
-            "games").collection("dobotsu").document("initialPosition").get();
+        DocumentSnapshot doc = await _firestore.collection("appData").document("games").collection("dobotsu").document("initialPosition").get();
         doc.data.forEach((key, value) {
           gridState.add(value.cast<String>());
         });
