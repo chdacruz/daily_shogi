@@ -1,4 +1,4 @@
-
+import 'package:async/async.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 
@@ -20,27 +20,36 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
 
   List<List<String>> gridState = new List<List<String>>();
   final _firestore = Firestore.instance;
+  final AsyncMemoizer _memoizer = AsyncMemoizer();
 
-  //Future<List<List<String>>> _setInitialBoardPositions() async {
+  bool _gameStarted = false;
+
   Future<void> _setInitialBoardPositions() async {
-    try {
-      if(gridState.length < 5) {
-        DocumentSnapshot doc = await _firestore.collection("appData").document("games").collection("dobotsu").document("initialPosition").get();
-        doc.data.forEach((key, value) {
-          gridState.add(value.cast<String>());
-        });
+    if(!_gameStarted){
+      try {
+        //Get the 5 rows of the board
+        if(gridState.length < 5) {
+          _gameStarted = true;
+          DocumentSnapshot doc = await _firestore.collection("appData").document("games").collection("dobotsu").document("initialPosition").get();
+          doc.data.forEach((key, value) {
+            gridState.add(value.cast<String>());
+          });
+        }
+      } catch(e) {
+        gridState = e;
       }
-    } catch(e) {
-      gridState = e;
     }
-
-   //print(gridState);
     return gridState;
+  }
+
+  _fetchInitialBoardPositions() {
+    return this._memoizer.runOnce(() async {
+      return _setInitialBoardPositions();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    //_setInitialBoardPositions();
     return Scaffold(
         appBar: AppBar(
           title: Text('Daily Shogi'),
@@ -50,7 +59,7 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 FutureBuilder(
-                    future: _setInitialBoardPositions(),
+                    future: _fetchInitialBoardPositions(),
                     builder: (context, snapshot) {
                       if(snapshot.connectionState == ConnectionState.done) {
                         return _buildBoard();
@@ -65,10 +74,7 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
   }
 
   Widget _buildBoard() {
-    int gridStateLength;
-
-    //_setInitialBoardPositions();
-    gridStateLength = gridState.length;
+    int gridStateLength = gridState.length;
 
     return Column(
         children: <Widget>[
@@ -98,9 +104,6 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
     x = (index / gridStateLength).floor();
     y = (index % gridStateLength);
 
-    //List<int> _curPosition = [x, y];
-    //print('Posição atual' + _curPosition.toString());
-
     return DragTarget(
       builder: (context, candidateData, rejectedData) {
         return GridTile(
@@ -116,12 +119,9 @@ class _MiniShogiScreenState extends State<MiniShogiScreen> {
       },
       onWillAccept: (data) {
         return true;
-        //if(data[0] == 'P1') return true;
-        //return false;
       },
       onAccept: (data) {
         setState(() {
-          //print('Nova Posição. X:' + x.toString() + 'Y:' + y.toString());
           List<int> _oldPosition = data[1];
           gridState[_oldPosition[0]][_oldPosition[1]] = '';
           gridState[x][y] = data[0];
