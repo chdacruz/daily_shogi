@@ -1,16 +1,20 @@
-# daily_shogi
+## Daily Shogi
 
-Daily Shogi
+An app for playing Shogi (Japanese Chess) with daily timer
 
-## Getting Started
+# Pieces
+All piece images used were taken from the Pychess Repository
 
-This project is a starting point for a Flutter application.
+https://github.com/gbtami/pychess-variants/tree/master/static/images/pieces/shogi
 
-A few resources to get you started if this is your first Flutter project:
+# Folder Structure
+The folder structure used was taken from Tadas Preta
+https://github.com/tadaspetra/flutter_starter_templates/tree/master/001_file_structure
 
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+assets: Images, logos, icons, etc;
+lib/models: Collections of data;
+lib/screens: App screens;
+lib/screens/example/local_widgets: Widgets used only for the scrren, locally;
+lib/services: Web interactions, such as Firebase, API's, etc.
+lib/utils: Functions used throughout the app;
+lib/widgets: Widgets used throughout the app.
